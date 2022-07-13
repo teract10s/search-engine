@@ -1,18 +1,22 @@
 package com.example.SearchEngine.SiteParse;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.RecursiveTask;
+import java.util.Set;
+import java.util.concurrent.ForkJoinPool;
 
-@ConfigurationProperties(prefix = "parser")
-public class Parser extends RecursiveTask<String> {
-    private static String url;
+@Component
+public class Parser implements CommandLineRunner {
+    @Value("${spring.application.url}")
+    private String url;
 
     @Override
-    protected String compute() {
-        List<Parser> taskList = new ArrayList<>();
-        return null;
+    public void run(String... args) throws Exception {
+        DBWriter.connect();
+        CreateListOfLinks listOfLinks = new CreateListOfLinks(url, url);
+        Set<String> paths = new ForkJoinPool().invoke(listOfLinks);
+        DBWriter.multiInsert();
     }
 }
