@@ -58,7 +58,7 @@ public class CreateListOfLinks extends RecursiveTask<Set<String>> {
 
         Document doc = connection.get();
 
-        DBWriter.write('/' + url.substring(rootURL.length()), connection.execute().statusCode(), doc.toString());
+        DBWriter.addPage('/' + url.substring(rootURL.length()), connection.execute().statusCode(), doc.toString());
         Elements href = doc.select("a[href]");
         href.forEach(h -> {
             String currentUrl = h.absUrl("href");
@@ -78,6 +78,6 @@ public class CreateListOfLinks extends RecursiveTask<Set<String>> {
     }
 
     private boolean checkURL(String currentUrl){
-        return currentUrl.startsWith(url);
+        return currentUrl.startsWith(url) && !currentUrl.endsWith("#");
     }
 }

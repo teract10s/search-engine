@@ -17,6 +17,6 @@ public class Parser implements CommandLineRunner {
         DBWriter.connect();
         CreateListOfLinks listOfLinks = new CreateListOfLinks(url, url);
         Set<String> paths = new ForkJoinPool().invoke(listOfLinks);
-        DBWriter.multiInsert();
+        DBWriter.multiInsertToPage();
     }
 }
